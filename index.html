@@ -14,10 +14,14 @@
         <input type="text" class="common" name="" id="chatid" placeholder="Chat ID"><br>
         <textarea class="txt0" name="" id="message" cols="30" rows="10" maxlength="1000" placeholder="Your Message/URL Here [HTML format support]" autofocus></textarea><br><br>
         <button class="btn" onclick="load()">Send</button><br>
-        <button class="btn" onclick="loadimg()">Send Photo</button><br><br>
+        <button class="btn" onclick="loadimg()">Send Photo</button><br>
+        <button class="btn" onclick="showUpdate()">Get Bot Updates</button>
         <p style="color: rgb(100, 100, 100);">Web Design & JS Developed by <a href="http://github.com/bishalqx980" target="_blank" style="color: rgb(0, 100, 255);">@bishalqx980</a> // Based on Telegram API</p><br>
     </div>
-    
+
+    <textarea name="" id="getUpdates" cols="30" rows="10" class="log" readonly placeholder=""></textarea>
+
+
     <style>
         .div0 {
             text-align: center;
@@ -59,6 +63,15 @@
         }
         .btn:hover {
             border-color: rgb(0, 100, 255);
+        }
+        .log {
+            position: absolute;
+            top: 30px;
+            width: 20%;
+            height: 90%;
+            border: none;
+            resize: none;
+            outline: none;
         }
     </style>
 
@@ -105,6 +118,24 @@
                 }
                 else {
                     alert("Photo Sent Failed! ⚠️\n\n" + "Error: " + api.response)
+                }
+            }
+        }
+        
+        function showUpdate() {
+            var token = document.getElementById("token").value;
+            var url = `https://api.telegram.org/bot${token}/getUpdates`;
+
+            let api = new XMLHttpRequest();
+            api.open("GET", url, true);
+            api.send();
+
+            api.onload = function() {
+                if (api.status == 200) {
+                    document.getElementById("getUpdates").innerHTML = api.response
+                }
+                else {
+                    alert("Get Updates Failed! ⚠️\n\n" + "Error: " + api.response)
                 }
             }
         }
