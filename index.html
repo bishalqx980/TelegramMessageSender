@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="img.png" type="image/x-icon">
+    <title>Telegram Message Sender</title>
+</head>
+<body onload="check()">
+    <div class="div0">
+        <h1><img src="img.png" alt="" srcset="" class="tgimg"> Telegram Message Sender</h1>
+        <input type="text" class="common" name="" id="token" placeholder="BOT API TOKEN"><br>
+        <input type="text" class="common" name="" id="chatid" placeholder="Chat ID"><br>
+        <textarea class="txt0" name="" id="message" cols="30" rows="10" maxlength="1000" placeholder="Your Message/URL Here [HTML format support]" autofocus></textarea><br><br>
+        <button class="btn" onclick="load()">Send</button><br>
+        <button class="btn" onclick="loadimg()">Send Photo</button><br><br>
+        <p style="color: rgb(100, 100, 100);">Web Design & JS Developed by <a href="http://github.com/bishalqx980" target="_blank" style="color: rgb(0, 100, 255);">@bishalqx980</a> // Based on Telegram API</p><br>
+    </div>
+    
+    <style>
+        .div0 {
+            text-align: center;
+            background-color: rgb(240, 240, 240);
+            box-shadow: 0px 0px 2px;
+            width: 50%;
+            margin: auto;
+        }
+        .tgimg {
+            width: 20px;
+        }
+        .common {
+            width: 40%;
+            margin-top: 1%;
+            margin-bottom: 1%;
+            padding: 10px;
+            outline-color: rgb(255, 150, 0);
+        }
+        .txt0 {
+            width: 40%;
+            max-width: 40%;
+            min-width: 40%;
+            max-height: 300px;
+            min-height: 100px;
+            margin-top: 1%;
+            margin-bottom: 1%;
+            padding: 10px;
+            outline-color: rgb(255, 150, 0);
+        }
+        .btn {
+            width: 45%;
+            margin-top: 1%;
+            margin-bottom: 1%;
+            padding: 10px;
+            background: none;
+            border: solid 1px rgb(200, 200, 200);
+            transition-duration: 500ms;
+            cursor: pointer;
+        }
+        .btn:hover {
+            border-color: rgb(0, 100, 255);
+        }
+    </style>
+
+    <script>
+        function check() {
+            var screenWidth = screen.width;
+            if (screenWidth < 600) {
+                alert("Your device width is " + screenWidth + "px 🙁! This webpage is designed for a minimum of 600px, so you may face some graphical issues!")
+            }
+        }
+        function load() {
+            var token = document.getElementById("token").value;
+            var chat_id = document.getElementById("chatid").value;
+            var message = document.getElementById("message").value;
+            var url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&parse_mode=HTML&text=${message}`;
+
+            let api = new XMLHttpRequest();
+            api.open("GET", url, true);
+            api.send();
+
+            api.onload = function() {
+                if (api.status == 200) {
+                    alert("Message Sent Success! ☑️")
+                }
+                else {
+                    alert("Message Sent Failed! ⚠️\n\n" + "Error: " + api.response)
+                }
+            }
+        }
+        
+        function loadimg() {
+            var token = document.getElementById("token").value;
+            var chat_id = document.getElementById("chatid").value;
+            var message = document.getElementById("message").value;
+            var url = `https://api.telegram.org/bot${token}/sendPhoto?chat_id=${chat_id}&parse_mode=HTML&photo=${message}`;
+
+            let api = new XMLHttpRequest();
+            api.open("GET", url, true);
+            api.send();
+
+            api.onload = function() {
+                if (api.status == 200) {
+                    alert("Photo Sent Success! ☑️")
+                }
+                else {
+                    alert("Photo Sent Failed! ⚠️\n\n" + "Error: " + api.response)
+                }
+            }
+        }
+    </script>
+</body>
+</html>
