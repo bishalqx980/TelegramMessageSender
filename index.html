@@ -131,7 +131,14 @@
 
             api.onload = function() {
                 if (api.status == 200) {
-                    document.getElementById("getUpdates").innerHTML = api.response
+                    var json = api.response;
+                    var data = JSON.parse(json);
+                    var organizedData = {};
+                    for (var key in data) {
+                        organizedData[key] = data[key];
+                    }
+                    var organizedJson = JSON.stringify(organizedData);
+                    document.getElementById("getUpdates").innerHTML = organizedJson
                 }
                 else {
                     alert("Get Updates Failed! ⚠️\n\n" + "Error: " + api.response)
