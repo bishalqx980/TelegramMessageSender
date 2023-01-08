@@ -2,7 +2,7 @@
 ------------------------
 Web Design & JS Developed by @bishalqx980 // Based on Telegram API
 
-- Version 1.00
+- Version 1.00 [29-08-2022]
 
 <img src="preview.JPG">
 
