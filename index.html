@@ -3,148 +3,250 @@
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <link rel="shortcut icon" href="img.png" type="image/x-icon">
-    <title>Telegram Message Sender</title>
-</head>
-<body onload="check()">
-    <div class="div0">
-        <h1><img src="img.png" alt="" srcset="" class="tgimg"> Telegram Message Sender</h1>
-        <input type="text" class="common" name="" id="token" placeholder="BOT API TOKEN"><br>
-        <input type="text" class="common" name="" id="chatid" placeholder="Chat ID"><br>
-        <textarea class="txt0" name="" id="message" cols="30" rows="10" maxlength="1000" placeholder="Your Message/URL Here [HTML format support]" autofocus></textarea><br><br>
-        <button class="btn" onclick="load()">Send</button><br>
-        <button class="btn" onclick="loadimg()">Send Photo</button><br>
-        <button class="btn" onclick="showUpdate()">Get Bot Updates</button>
-        <p style="color: rgb(100, 100, 100);">Web Design & JS Developed by <a href="https://bishalqx980.github.io/bishalqx980/" target="_blank" style="color: rgb(0, 100, 255);">@bishalqx980</a> // Based on Telegram API</p><br>
-    </div>
-
-    <textarea name="" id="getUpdates" cols="30" rows="10" class="log" readonly placeholder=""></textarea>
-
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.png" type="image/x-icon">
+    <title>Telegram Message Sender 2.0</title>
     <style>
-        .div0 {
-            text-align: center;
+        body {
             background-color: rgb(240, 240, 240);
-            box-shadow: 0px 0px 2px;
-            width: 50%;
+            color: rgb(0, 0, 0);
+            font-family: sans-serif;
+            width: 100%;
+            margin: auto;
+            text-align: center;
+        }
+        .main_div {
+            width: 100%;
             margin: auto;
         }
-        .tgimg {
-            width: 20px;
-        }
-        .common {
-            width: 40%;
+        #response {
+            background-color: rgb(3, 155, 229);
+            color: rgb(255, 255, 255);
+            width: 90%;
+            margin: auto;
             margin-top: 1%;
-            margin-bottom: 1%;
-            padding: 10px;
-            outline-color: rgb(255, 150, 0);
+            border-radius: 5px;
+            padding: 5px;
         }
-        .txt0 {
-            width: 40%;
-            max-width: 40%;
-            min-width: 40%;
-            max-height: 300px;
-            min-height: 100px;
+        .tg_img {
+            width: 64px;
+        }
+        hr {
+            width: 90%;
+            opacity: 50%;
+        }
+        .text_area {
+            width: 200px;
+            outline-color: rgb(3, 155, 229);
+            padding: 5px;
+            border: solid 1px rgb(200, 200, 200);
+            border-radius: 2px;
             margin-top: 1%;
-            margin-bottom: 1%;
-            padding: 10px;
-            outline-color: rgb(255, 150, 0);
         }
         .btn {
-            width: 45%;
-            margin-top: 1%;
-            margin-bottom: 1%;
-            padding: 10px;
-            background: none;
+            background-color: rgb(240, 240, 240);
+            color: rgb(0, 0, 0);
+            padding: 5px;
             border: solid 1px rgb(200, 200, 200);
-            transition-duration: 500ms;
+            border-radius: 2px;
+            margin-bottom: 1%;
             cursor: pointer;
+            transition-duration: 300ms;
         }
         .btn:hover {
-            border-color: rgb(0, 100, 255);
+            border-color: rgb(3, 155, 229);
         }
-        .log {
-            position: absolute;
-            top: 30px;
-            width: 20%;
-            height: 90%;
-            border: none;
-            resize: none;
-            outline: none;
+        .proceed {
+            width: 250px;
+            padding: 10px;
+        }
+        .btn_div {
+            width: 50%;
+            margin: auto;
+            border: solid 1px rgb(200, 200, 200);
+            border-radius: 2px;
+            padding: 5px;
+        }
+        .output_area {
+            width: 80%;
+            border: solid 1px rgb(200, 200, 200);
+            border-radius: 2px;
+            outline-color: rgb(3, 155, 229);
+            resize: vertical;
+        }
+        a {
+            color: rgb(3, 155, 229);
+        }
+        ::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background-color: rgb(3, 155, 229);
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background-color: rgb(240, 240, 240);
         }
     </style>
-
     <script>
-        function check() {
-            var screenWidth = screen.width;
-            if (screenWidth < 600) {
-                alert("Your device width is " + screenWidth + "px 🙁! This webpage is designed for a minimum of 600px, so you may face some graphical issues!")
-            }
-        }
+        // Onload
         function load() {
-            var token = document.getElementById("token").value;
-            var chat_id = document.getElementById("chatid").value;
+            var year = new Date().getFullYear();
+            document.getElementById("year").innerHTML = year;
+
+            var bot_api = localStorage.getItem("bot_api")
+            var chat_id = localStorage.getItem("chat_id")
+
+            document.getElementById("bot_api").value = bot_api;
+            document.getElementById("chat_id").value = chat_id;
+        }
+
+        // localStorage
+        function save_value() {
+            var bot_api = document.getElementById("bot_api").value;
+            var chat_id = document.getElementById("chat_id").value;
+            
+            localStorage.setItem("bot_api", bot_api)
+            localStorage.setItem("chat_id", chat_id)
+
+            document.getElementById("server_response").innerHTML = "<b>Value Saved Successfully!</b>"
+        }
+
+        // main work
+        function sendmsg() {
+            var bot_api = document.getElementById("bot_api").value;
+            var chat_id = document.getElementById("chat_id").value;
             var message = document.getElementById("message").value;
-            var url = `https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&parse_mode=HTML&text=${message}`;
+            var url = `https://api.telegram.org/bot${bot_api}/sendMessage?chat_id=${chat_id}&parse_mode=HTML&text=${message}`;
 
             let api = new XMLHttpRequest();
             api.open("GET", url, true);
             api.send();
 
             api.onload = function() {
-                if (api.status == 200) {
-                    alert("Message Sent Success! ☑️")
-                }
-                else {
-                    alert("Message Sent Failed! ⚠️\n\n" + "Error: " + api.response)
+                var api_res = api.status;
+                var server_response = document.getElementById("server_response");
+                if (api_res == 200) {
+                    server_response.innerHTML = "<b>Message Sent!</b>"
+                }else {
+                    server_response.innerHTML = "<b>Message not Sent! »</b><br>" + api_res + api.response
                 }
             }
         }
         
-        function loadimg() {
-            var token = document.getElementById("token").value;
-            var chat_id = document.getElementById("chatid").value;
+        function sendphoto() {
+            var bot_api = document.getElementById("bot_api").value;
+            var chat_id = document.getElementById("chat_id").value;
             var message = document.getElementById("message").value;
-            var url = `https://api.telegram.org/bot${token}/sendPhoto?chat_id=${chat_id}&parse_mode=HTML&photo=${message}`;
+            var url = `https://api.telegram.org/bot${bot_api}/sendPhoto?chat_id=${chat_id}&parse_mode=HTML&photo=${message}`;
 
             let api = new XMLHttpRequest();
             api.open("GET", url, true);
             api.send();
 
             api.onload = function() {
-                if (api.status == 200) {
-                    alert("Photo Sent Success! ☑️")
-                }
-                else {
-                    alert("Photo Sent Failed! ⚠️\n\n" + "Error: " + api.response)
+                var api_res = api.status;
+                var server_response = document.getElementById("server_response");
+                if (api_res == 200) {
+                    server_response.innerHTML = "<b>Photo Sent!</b>"
+                }else {
+                    server_response.innerHTML = "<b>Photo not Sent! »</b><br>" + api_res + api.response
                 }
             }
         }
         
-        function showUpdate() {
-            var token = document.getElementById("token").value;
-            var url = `https://api.telegram.org/bot${token}/getUpdates`;
+        function get_update() {
+            var bot_api = document.getElementById("bot_api").value;
+            var url = `https://api.telegram.org/bot${bot_api}/getUpdates`;
 
             let api = new XMLHttpRequest();
             api.open("GET", url, true);
             api.send();
 
             api.onload = function() {
-                if (api.status == 200) {
+                var api_res = api.status;
+                var server_update_response = document.getElementById("server_update_response");
+                if (api_res == 200) {
                     var json = api.response;
                     var data = JSON.parse(json);
-                    var organizedData = {};
+                    var output_data = {};
                     for (var key in data) {
-                        organizedData[key] = data[key];
+                        output_data[key] = data[key];
                     }
-                    var organizedJson = JSON.stringify(organizedData);
-                    document.getElementById("getUpdates").innerHTML = organizedJson
-                }
-                else {
-                    alert("Get Updates Failed! ⚠️\n\n" + "Error: " + api.response)
+                    var output_json = JSON.stringify(output_data);
+                    server_update_response.innerHTML = output_json 
+                    server_update_response.scrollTop = server_update_response.scrollHeight;
+                }else {
+                    server_update_response.innerHTML = "<b>Error »</b><br>" + api_res + api.response
                 }
             }
         }
+
+        function check_length() {
+            var textarea = document.getElementById("message");
+            var server_response = document.getElementById("server_response")
+
+            if (textarea.value.length > 1800) {
+                server_response.innerHTML = "Error » Inputed text is: " + textarea.value.length + " | Max_length: 1800"
+            }else {
+                server_response.innerHTML = "Inputed text is: " + textarea.value.length
+            }
+        }
+
+        // font button
+        function bold_font() {
+            document.getElementById("message").value += "<b>YOUR_TEXT_HERE</b>"
+        }
+        function italic_font() {
+            document.getElementById("message").value += "<i>YOUR_TEXT_HERE</i>"
+        }
+        function underline_font() {
+            document.getElementById("message").value += "<u>YOUR_TEXT_HERE</u>"
+        }
+        function strikethrough_font() {
+            document.getElementById("message").value += "<s>YOUR_TEXT_HERE</s>"
+        }
+        function monospace_font() {
+            document.getElementById("message").value += "<pre>YOUR_TEXT_HERE</pre>"
+        }
+        function spoiler_font() {
+            document.getElementById("message").value += "<tg-spoiler>YOUR_TEXT_HERE</tg-spoiler>"
+        }
+        function createlink_font() {
+            document.getElementById("message").value += "<a href='http://www.example.com/'>YOUR_TEXT_HERE</a>"
+        }
     </script>
+</head>
+<body onload="load()">
+    <div class="main_div" id="main_div">
+        <h1 id="response">Telegram Message Sender 2.0</h1>
+        <hr><br>
+        <input type="text" name="" id="bot_api" class="text_area" placeholder="BOT API">
+        <input type="text" name="" id="chat_id" class="text_area" placeholder="Chat ID">
+        <br><br>
+        <button class="btn" onclick="save_value()">Save Value</button>
+        <p id="server_response">- Response -</p>
+        <div class="btn_div">
+            <b>Font Style</b><br><br>
+            <button class="btn" onclick="bold_font()">Bold</button>
+            <button class="btn" onclick="italic_font()">Italic</button>
+            <button class="btn" onclick="underline_font()">Underline</button>
+            <button class="btn" onclick="strikethrough_font()">Strikethrough</button>
+            <button class="btn" onclick="monospace_font()">Monospace</button>
+            <button class="btn" onclick="spoiler_font()">Spoiler</button>
+            <button class="btn" onclick="createlink_font()">Create Link</button>
+        </div><br>
+        <textarea name="" id="message" class="output_area" cols="30" rows="10" oninput="check_length()" placeholder="Your Message Here!"></textarea>
+        <br><br>
+        <button onclick="sendmsg()" class="btn proceed" id="proceedbtn">Send Message</button>
+        <button onclick="sendphoto()" class="btn proceed" id="proceedbtn">Send Photo [URL]</button>
+        <br><br>
+        <textarea name="" id="server_update_response" class="output_area" cols="30" rows="10" placeholder="Log Area" readonly disabled></textarea>
+        <br><br>
+        <button onclick="get_update()" class="btn proceed" id="proceedbtn">Get Update</button>
+    </div>
+    <hr>
+    <p>Copyright <span id="year"></span> | Developed by <a href="https://bishalqx980.github.io/bishalqx980">@bishalqx980</a></p>
 </body>
 </html>
